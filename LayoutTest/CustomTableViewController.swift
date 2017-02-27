@@ -253,6 +253,8 @@ class CustomTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        customTableView.showsVerticalScrollIndicator = false
+        customTableView.showsHorizontalScrollIndicator = false
         customTableView.reload()
     }
     
