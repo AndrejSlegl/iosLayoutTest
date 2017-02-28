@@ -11,8 +11,8 @@ import UIKit
 
 class CustomTableViewCell: UIView {
     let label = UILabel()
+    let label2 = UILabel()
     let subview0 = UIView()
-    let subview0HeightConstraint: NSLayoutConstraint
     
     var data: CustomTableView.CellData? {
         didSet {
@@ -27,19 +27,28 @@ class CustomTableViewCell: UIView {
     }
     
     override init(frame: CGRect) {
-        subview0HeightConstraint = subview0.heightAnchor.constraint(equalToConstant: 0)
-        subview0HeightConstraint.isActive = true
-        subview0HeightConstraint.priority = 999
-        
         super.init(frame: frame)
         
         backgroundColor = UIColor.clear
+        clipsToBounds = true
         translatesAutoresizingMaskIntoConstraints = true
+        autoresizesSubviews = false
+        autoresizingMask = UIViewAutoresizing(rawValue: 0)
+        
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.setContentHuggingPriority(1000, for: .horizontal)
+        label.setContentCompressionResistancePriority(1000, for: .horizontal)
+        
         subview0.translatesAutoresizingMaskIntoConstraints = false
+        
+        label2.translatesAutoresizingMaskIntoConstraints = false
+        label2.numberOfLines = 0
+        label2.lineBreakMode = .byWordWrapping
+        label2.textAlignment = .left
         
         addSubview(subview0)
         subview0.addSubview(label)
+        subview0.addSubview(label2)
         
         subview0.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         subview0.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
@@ -48,6 +57,11 @@ class CustomTableViewCell: UIView {
         
         label.centerYAnchor.constraint(equalTo: subview0.centerYAnchor).isActive = true
         label.leadingAnchor.constraint(equalTo: subview0.leadingAnchor, constant: 20).isActive = true
+        
+        label2.topAnchor.constraint(equalTo: subview0.topAnchor, constant: 10).isActive = true
+        subview0.bottomAnchor.constraint(equalTo: label2.bottomAnchor, constant: 10).isActive = true
+        subview0.trailingAnchor.constraint(equalTo: label2.trailingAnchor, constant: 20).isActive = true
+        label2.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 20).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -57,7 +71,6 @@ class CustomTableViewCell: UIView {
 
 class CustomTableView: UIScrollView {
     class CellData {
-        var height: CGFloat = 0
         var color: UIColor = UIColor.black
         var calculatedHeight: CGFloat = 0
         var isHeightInvalidated: Bool = true
@@ -65,11 +78,17 @@ class CustomTableView: UIScrollView {
         weak var cell: CustomTableViewCell?
     }
     
-    let visibleCellMargin: CGFloat = 1
-    var contentWidth: CGFloat = 0
+    private var contentWidth: CGFloat = 0
     
-    var reusableCells: [CustomTableViewCell] = []
-    var cellDataArray: [CellData] = []
+    private var reusableCells: [CustomTableViewCell] = []
+    private var cellDataArray: [CellData] = []
+    
+    let textArray = [
+        "aåobshioer fsgbsdiog bfihsbfgio sfbg usofbdugbsdfug bsduig sb ufiwdbg usdbgusdbf udbg ubgupbg udabg usdbg dsiu gbdaug bdsugbadugo dsb fuqe bgueabfiuesb vuabs iufbaeiu baduwe bguiasbg uisad bfsaui gbadsiuf ba euifbasuif basui fadfg a",
+        "gdgsdg dsg sdfds fsfsh fshfds fshfdsh fds h dfhfdh dfh dfhfdh fdhdfhfdg fsdh dfhfdh dfhdfhdfh dfhdf hfdshd fghasf gsfghsfgsf gsdfhsfghsd hshgsfghsf gsdg sdgsd gsd",
+        "gdsgfs gdfsgh fsgdfsh fsh fsfdsh sfg sf gdsg sdgdsg sdg dsgdsg sd",
+        "f dafda gdagda fsa"
+    ]
     
     let colorArray: [UIColor] = [
         UIColor(white: 0.6, alpha: 1.0),
@@ -89,11 +108,11 @@ class CustomTableView: UIScrollView {
     }
     
     func reload() {
+        self.autoresizesSubviews = false
         let rowCount = 100
         
         for i in 0 ..< rowCount {
             let cellData = CellData()
-            //cellData.height = CGFloat((arc4random() % 10) + 5) * 15
             cellData.color = colorArray[i % colorArray.count]
             cellData.orderNumber = i
             cellDataArray.append(cellData)
@@ -106,6 +125,12 @@ class CustomTableView: UIScrollView {
         let widthChanged = bounds.size.width != contentWidth
         contentWidth = bounds.size.width
         
+        update(widthChanged: widthChanged)
+        
+        super.layoutSubviews()
+    }
+    
+    func update(widthChanged: Bool) {
         var contentHeight = contentSize.height
         var verticalContentOffset = contentOffset.y
         
@@ -166,8 +191,6 @@ class CustomTableView: UIScrollView {
         contentOffset = CGPoint(x: contentOffset.x, y: verticalContentOffset)
         contentSize = CGSize(width: contentWidth, height: contentHeight)
         updateVisibleCellFrames()
-        
-        super.layoutSubviews()
     }
     
     func updateVisibleCellFrames() {
@@ -192,6 +215,11 @@ class CustomTableView: UIScrollView {
     
     func updateHeightIfInvalidated(_ data: CellData) -> CGFloat {
         if data.isHeightInvalidated, let cell = data.cell {
+            if cell.frame.size.width != contentWidth {
+                cell.frame = CGRect(x: 0, y: 0, width: contentWidth, height: cell.frame.size.height)
+                cell.updateConstraintsIfNeeded()
+            }
+            
             let size = cell.systemLayoutSizeFitting(CGSize(width: contentWidth, height: 0))
             let diff = size.height - data.calculatedHeight
             data.calculatedHeight = size.height
@@ -236,8 +264,8 @@ class CustomTableView: UIScrollView {
         
         let cell = reusableCell()
         cell.subview0.backgroundColor = data.color
-        cell.subview0HeightConstraint.constant = CGFloat((arc4random() % 20) + 5) * 10
         cell.label.text = "\(data.orderNumber)"
+        cell.label2.text = textArray[Int(arc4random()) % textArray.count]
         cell.data = data
         
         data.isHeightInvalidated = true
