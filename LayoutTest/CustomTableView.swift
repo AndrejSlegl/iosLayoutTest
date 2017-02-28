@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class CustomTableView: UIScrollView {
-    class CellData {
+    internal class CellData {
         var calculatedHeight: CGFloat = 0
         var isHeightInvalidated: Bool = true
         var orderNumber = 0
@@ -208,11 +208,13 @@ class CustomTableView: UIScrollView {
             return cell
         }
         
-        let cell = reusableCell(fromNibNamed: "TextCell")
+        let nibName = arc4random() % 2 == 0 ? "TextCell" : "ImageCell"
+        
+        let cell = reusableCell(fromNibNamed: nibName)
         cell.data = data
         
-        if let textCell = cell as? TextCell {
-            textCell.setData(data)
+        if let baseCell = cell as? BaseCell {
+            baseCell.setData(data)
         }
         
         data.isHeightInvalidated = true

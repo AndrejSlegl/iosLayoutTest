@@ -9,14 +9,9 @@
 import Foundation
 import UIKit
 
-class TextCell: CustomTableViewCell {
+class TextCell: BaseCell {
     @IBOutlet weak var orderNumberLabel: UILabel!
     @IBOutlet weak var textLabel: UILabel!
-    
-    let colorArray: [UIColor] = [
-        UIColor(white: 0.6, alpha: 1.0),
-        UIColor(white: 0.8, alpha: 1.0)
-    ]
     
     let textArray = [
         "aåobshioer fsgbsdiog bfihsbfgio sfbg usofbdugbsdfug bsduig sb ufiwdbg usdbgusdbf udbg ubgupbg udabg usdbg dsiu gbdaug bdsugbadugo dsb fuqe bgueabfiuesb vuabs iufbaeiu baduwe bguiasbg uisad bfsaui gbadsiuf ba euifbasuif basui fadfg a",
@@ -25,8 +20,8 @@ class TextCell: CustomTableViewCell {
         "f dafda gdagda fsa"
     ]
     
-    func setData(_ data: CustomTableView.CellData) {
-        backgroundColor = colorArray[data.orderNumber % colorArray.count]
+    override func setData(_ data: CustomTableView.CellData) {
+        super.setData(data)
         orderNumberLabel.text = "\(data.orderNumber)"
         textLabel.text = textArray[Int(arc4random()) % textArray.count]
     }

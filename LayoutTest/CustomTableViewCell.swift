@@ -35,7 +35,6 @@ class CustomTableViewCell: UIView {
     }
     
     private func initialize() {
-        backgroundColor = UIColor.clear
         clipsToBounds = true
         translatesAutoresizingMaskIntoConstraints = true
         autoresizesSubviews = false
