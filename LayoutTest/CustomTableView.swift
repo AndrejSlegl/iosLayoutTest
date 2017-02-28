@@ -11,7 +11,6 @@ import UIKit
 
 class CustomTableView: UIScrollView {
     class CellData {
-        var color: UIColor = UIColor.black
         var calculatedHeight: CGFloat = 0
         var isHeightInvalidated: Bool = true
         var orderNumber = 0
@@ -21,18 +20,6 @@ class CustomTableView: UIScrollView {
     private var contentWidth: CGFloat = 0
     private var reusableCells: [CustomTableViewCell] = []
     private var cellDataArray: [CellData] = []
-    
-    let textArray = [
-        "aåobshioer fsgbsdiog bfihsbfgio sfbg usofbdugbsdfug bsduig sb ufiwdbg usdbgusdbf udbg ubgupbg udabg usdbg dsiu gbdaug bdsugbadugo dsb fuqe bgueabfiuesb vuabs iufbaeiu baduwe bguiasbg uisad bfsaui gbadsiuf ba euifbasuif basui fadfg a",
-        "gdgsdg dsg sdfds fsfsh fshfds fshfdsh fds h dfhfdh dfh dfhfdh fdhdfhfdg fsdh dfhfdh dfhdfhdfh dfhdf hfdshd fghasf gsfghsfgsf gsdfhsfghsd hshgsfghsf gsdg sdgsd gsd",
-        "gdsgfs gdfsgh fsgdfsh fsh fsfdsh sfg sf gdsg sdgdsg sdg dsgdsg sd",
-        "f dafda gdagda fsa"
-    ]
-    
-    let colorArray: [UIColor] = [
-        UIColor(white: 0.6, alpha: 1.0),
-        UIColor(white: 0.8, alpha: 1.0)
-    ]
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -50,12 +37,18 @@ class CustomTableView: UIScrollView {
         autoresizesSubviews = false
     }
     
-    private func reusableCell() -> CustomTableViewCell {
-        if let cell = reusableCells.first(where: { $0.data == nil }) {
+    private func reusableCell(fromNibNamed: String) -> CustomTableViewCell {
+        if let cell = reusableCells.first(where: { $0.data == nil && $0.reuseIdentifier == fromNibNamed }) {
             return cell
         }
         
-        let cell = CustomTableViewCell()
+        let xib = Bundle.main.loadNibNamed(fromNibNamed, owner: nil, options: nil)
+        
+        guard let cell = xib?.first as? CustomTableViewCell else {
+            fatalError("Cannot load CustomTableViewCell instance from nib \"\(fromNibNamed)\"")
+        }
+        
+        cell.reuseIdentifier = fromNibNamed
         reusableCells.append(cell)
         self.addSubview(cell)
         
@@ -67,7 +60,6 @@ class CustomTableView: UIScrollView {
         
         for i in 0 ..< rowCount {
             let cellData = CellData()
-            cellData.color = colorArray[i % colorArray.count]
             cellData.orderNumber = i
             cellDataArray.append(cellData)
         }
@@ -216,11 +208,12 @@ class CustomTableView: UIScrollView {
             return cell
         }
         
-        let cell = reusableCell()
-        cell.subview0.backgroundColor = data.color
-        cell.label.text = "\(data.orderNumber)"
-        cell.label2.text = textArray[Int(arc4random()) % textArray.count]
+        let cell = reusableCell(fromNibNamed: "TextCell")
         cell.data = data
+        
+        if let textCell = cell as? TextCell {
+            textCell.setData(data)
+        }
         
         data.isHeightInvalidated = true
         

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TextCell" customModule="LayoutTest" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="412" height="191"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pWu-CH-CMc">
+                    <rect key="frame" x="20" y="85" width="42" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WqH-IU-Mgn">
+                    <rect key="frame" x="72" y="10" width="320" height="171"/>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="WqH-IU-Mgn" firstAttribute="leading" secondItem="pWu-CH-CMc" secondAttribute="trailing" constant="10" id="G7k-II-13u"/>
+                <constraint firstItem="pWu-CH-CMc" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="HZK-fJ-rhC"/>
+                <constraint firstItem="pWu-CH-CMc" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="P08-vS-bnm"/>
+                <constraint firstItem="WqH-IU-Mgn" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="Tx0-uu-TLV"/>
+                <constraint firstAttribute="trailing" secondItem="WqH-IU-Mgn" secondAttribute="trailing" constant="20" id="ciO-mE-BVI"/>
+                <constraint firstAttribute="bottom" secondItem="WqH-IU-Mgn" secondAttribute="bottom" constant="10" id="zgU-et-9Aj"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="orderNumberLabel" destination="pWu-CH-CMc" id="TOh-4j-2wd"/>
+                <outlet property="textLabel" destination="WqH-IU-Mgn" id="dum-V7-072"/>
+            </connections>
+            <point key="canvasLocation" x="53" y="-184.5"/>
+        </view>
+    </objects>
+</document>
