@@ -166,7 +166,7 @@ class CustomTableView: UIScrollView {
                 cell.updateConstraintsIfNeeded()
             }
             
-            let size = cell.systemLayoutSizeFitting(CGSize(width: contentWidth, height: 0))
+            let size = cell.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
             let diff = size.height - data.calculatedHeight
             data.calculatedHeight = size.height
             data.isHeightInvalidated = false
