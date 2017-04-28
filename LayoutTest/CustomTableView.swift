@@ -71,7 +71,10 @@ class CustomTableView: UIScrollView {
         let widthChanged = bounds.size.width != contentWidth
         contentWidth = bounds.size.width
         
-        update(widthChanged: widthChanged)
+        DispatchQueue.main.async {
+            self.update(widthChanged: widthChanged)
+        }
+        
         
         super.layoutSubviews()
     }
@@ -134,6 +137,8 @@ class CustomTableView: UIScrollView {
             i += 1
         }
         
+        
+        
         contentOffset = CGPoint(x: contentOffset.x, y: verticalContentOffset)
         contentSize = CGSize(width: contentWidth, height: contentHeight)
         updateVisibleCellFrames()
@@ -166,9 +171,16 @@ class CustomTableView: UIScrollView {
                 cell.updateConstraintsIfNeeded()
             }
             
-            let size = cell.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
-            let diff = size.height - data.calculatedHeight
-            data.calculatedHeight = size.height
+            var fittingSize = UILayoutFittingCompressedSize
+            //fittingSize.width = contentWidth
+            
+            //let complexCell = cell as! ComplexCell
+            
+            let size = cell.systemLayoutSizeFitting(fittingSize)
+            let height = size.height
+            
+            let diff = height - data.calculatedHeight
+            data.calculatedHeight = height
             data.isHeightInvalidated = false
             
             return diff
@@ -208,7 +220,7 @@ class CustomTableView: UIScrollView {
             return cell
         }
         
-        let nibName = arc4random() % 2 == 0 ? "TextCell" : "ImageCell"
+        let nibName = "ComplexCell" //arc4random() % 2 == 0 ? "TextCell" : "ImageCell"
         
         let cell = reusableCell(fromNibNamed: nibName)
         cell.data = data
