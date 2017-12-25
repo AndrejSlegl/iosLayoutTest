@@ -11,12 +11,14 @@ import UIKit
 
 class CustomTableViewController: UIViewController {
     @IBOutlet weak var customTableView: CustomTableView!
-    @IBOutlet weak var titleLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         customTableView.reload()
+    }
+    
+    @IBAction func button1Tapped(_ sender: Any) {
     }
     
 }

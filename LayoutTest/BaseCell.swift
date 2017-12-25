@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class BaseCell : CustomTableViewCell {
+class BaseCell : UIView {
     
     let colorArray: [UIColor] = [
         UIColor(white: 0.6, alpha: 1.0),

@@ -44,11 +44,11 @@ class CustomTableView: UIScrollView {
         
         let xib = Bundle.main.loadNibNamed(fromNibNamed, owner: nil, options: nil)
         
-        guard let cell = xib?.first as? CustomTableViewCell else {
-            fatalError("Cannot load CustomTableViewCell instance from nib \"\(fromNibNamed)\"")
+        guard let cellView = xib?.first as? UIView else {
+            fatalError("Cannot load UIView instance from nib \"\(fromNibNamed)\"")
         }
         
-        cell.reuseIdentifier = fromNibNamed
+        let cell = CustomTableViewCell(subview: cellView, reuseIdentifier: fromNibNamed)
         reusableCells.append(cell)
         self.addSubview(cell)
         
@@ -166,19 +166,15 @@ class CustomTableView: UIScrollView {
     
     private func updateHeightIfInvalidated(_ data: CellData) -> CGFloat {
         if data.isHeightInvalidated, let cell = data.cell {
-            if cell.frame.size.width != contentWidth {
-                cell.frame = CGRect(x: 0, y: 0, width: contentWidth, height: cell.frame.size.height)
+            cell.frame = CGRect(x: 0, y: 0, width: contentWidth, height: 0)
+            
+            while cell.needsUpdateConstraints() {
                 cell.updateConstraintsIfNeeded()
             }
             
-            var fittingSize = UILayoutFittingCompressedSize
-            //fittingSize.width = contentWidth
+            cell.layoutIfNeeded()
             
-            //let complexCell = cell as! ComplexCell
-            
-            let size = cell.systemLayoutSizeFitting(fittingSize)
-            let height = size.height
-            
+            let height = cell.subview.frame.height
             let diff = height - data.calculatedHeight
             data.calculatedHeight = height
             data.isHeightInvalidated = false
@@ -225,7 +221,7 @@ class CustomTableView: UIScrollView {
         let cell = reusableCell(fromNibNamed: nibName)
         cell.data = data
         
-        if let baseCell = cell as? BaseCell {
+        if let baseCell = cell.subview as? BaseCell {
             baseCell.setData(data)
         }
         

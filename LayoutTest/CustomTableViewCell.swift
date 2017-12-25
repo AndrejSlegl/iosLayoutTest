@@ -10,9 +10,10 @@ import Foundation
 import UIKit
 
 class CustomTableViewCell: UIView {
-    internal(set) var reuseIdentifier: String!
+    let subview: UIView
+    let reuseIdentifier: String
     
-    internal var data: CustomTableView.CellData? {
+    var data: CustomTableView.CellData? {
         didSet {
             oldValue?.cell = nil
             data?.cell = self
@@ -20,24 +21,35 @@ class CustomTableViewCell: UIView {
         }
     }
     
-    internal var orderNumber: Int {
+    var orderNumber: Int {
         return data?.orderNumber ?? -1
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        initialize()
+    required init(subview: UIView, reuseIdentifier: String) {
+        self.subview = subview
+        self.reuseIdentifier = reuseIdentifier
+        
+        super.init(frame: CGRect.zero)
+        
+        addSubview(subview)
+        
+        subview.translatesAutoresizingMaskIntoConstraints = false
+        subview.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        subview.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        trailingAnchor.constraint(equalTo: subview.trailingAnchor).isActive = true
+        
+        let bottomConstraint = bottomAnchor.constraint(equalTo: subview.bottomAnchor)
+        bottomConstraint.priority = UILayoutPriority(1)
+        bottomConstraint.isActive = true
+        
+        clipsToBounds = true
+        translatesAutoresizingMaskIntoConstraints = true
+        autoresizesSubviews = true
+        autoresizingMask = UIViewAutoresizing(rawValue: 0)
+        backgroundColor = UIColor.clear
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        initialize()
-    }
-    
-    private func initialize() {
-        clipsToBounds = true
-        translatesAutoresizingMaskIntoConstraints = true
-        autoresizesSubviews = false
-        autoresizingMask = UIViewAutoresizing(rawValue: 0)
+        return nil
     }
 }
