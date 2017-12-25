@@ -19,6 +19,7 @@ class CustomTableViewController: UIViewController {
     }
     
     @IBAction func button1Tapped(_ sender: Any) {
+        customTableView.animate()
     }
     
 }

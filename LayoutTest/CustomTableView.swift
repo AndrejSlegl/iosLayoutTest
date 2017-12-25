@@ -14,6 +14,7 @@ class CustomTableView: UIScrollView {
         var calculatedHeight: CGFloat = 0
         var isHeightInvalidated: Bool = true
         var orderNumber = 0
+        var imageHeight: CGFloat = 100
         weak var cell: CustomTableViewCell?
     }
     
@@ -70,11 +71,7 @@ class CustomTableView: UIScrollView {
     override func layoutSubviews() {
         let widthChanged = bounds.size.width != contentWidth
         contentWidth = bounds.size.width
-        
-        DispatchQueue.main.async {
-            self.update(widthChanged: widthChanged)
-        }
-        
+        update(widthChanged: widthChanged)
         
         super.layoutSubviews()
     }
@@ -90,7 +87,19 @@ class CustomTableView: UIScrollView {
                     contentHeight += updateHeightIfInvalidated(data)
                 }
             }
+        } else {
+            for cell in reusableCells {
+                if let data = cell.data, data.isHeightInvalidated {
+                    if let baseCell = cell.subview as? ComplexCell {
+                        baseCell.imageViewHeightConstraint.constant = data.imageHeight
+                    }
+                    
+                    contentHeight += updateHeightIfInvalidated(data)
+                }
+            }
         }
+        
+        updateVisibleCellFrames() // need updated frames before we go removing / adding new ones
         
         if let cells = reusableCellsOnEdge() {
             if contentOffset.y + bounds.size.height >= contentHeight {
@@ -136,8 +145,6 @@ class CustomTableView: UIScrollView {
             
             i += 1
         }
-        
-        
         
         contentOffset = CGPoint(x: contentOffset.x, y: verticalContentOffset)
         contentSize = CGSize(width: contentWidth, height: contentHeight)
@@ -228,6 +235,28 @@ class CustomTableView: UIScrollView {
         data.isHeightInvalidated = true
         
         return cell
+    }
+    
+    var animateToggle = false
+    
+    func animate() {
+        let first = cellDataArray[0]
+        let third = cellDataArray[2]
+        
+        self.layoutIfNeeded()
+        
+        first.imageHeight = animateToggle ? 100 : 0
+        first.isHeightInvalidated = true
+        
+        third.imageHeight = animateToggle ? 100 : 20
+        third.isHeightInvalidated = true
+        
+        animateToggle = !animateToggle
+        self.setNeedsLayout()
+        
+        UIView.animate(withDuration: 1) {
+            self.layoutIfNeeded()
+        }
     }
     
 }

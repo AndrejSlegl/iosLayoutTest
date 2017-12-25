@@ -37,7 +37,7 @@ class ComplexCell: BaseCell {
     override func setData(_ data: CustomTableView.CellData) {
         super.setData(data)
         orderNumberLabel.text = "\(data.orderNumber)"
-        imageViewHeightConstraint.constant = imageHeights[Int(arc4random()) % imageHeights.count]
+        imageViewHeightConstraint.constant = data.imageHeight //imageHeights[Int(arc4random()) % imageHeights.count]
         titleLabel.text = textArray[Int(arc4random()) % textArray.count]
         descLabel.text = textArray[Int(arc4random()) % textArray.count]
     }
