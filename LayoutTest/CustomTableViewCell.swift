@@ -38,6 +38,6 @@ class CustomTableViewCell: UIView {
         clipsToBounds = true
         translatesAutoresizingMaskIntoConstraints = true
         autoresizesSubviews = false
-        autoresizingMask = UIViewAutoresizing(rawValue: 0)
+        autoresizingMask = UIView.AutoresizingMask(rawValue: 0)
     }
 }
